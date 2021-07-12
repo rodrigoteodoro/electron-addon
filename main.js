@@ -4,11 +4,58 @@ const path = require('path')
 const express = require("express")
 const fs = require('fs')
 const btsqlite = require('better-sqlite3')
-const regras = require('./modulos/regras/build/Release/regras.node')
+const isDev = require('electron-is-dev')
+var fw = require('firewall')
+const osmod = require('os')
 
 var serversn7
 var server
-var dbpath = './dados/produtos.db'
+
+var dbpath = null
+
+if (isDev) {
+    dbpath = './dados/produtos.db'
+} else {
+    dbpath = path.join(path.dirname(process.resourcesPath), 'dados/produtos.db')
+}
+
+//Firewall - https://www.npmjs.com/package/firewall
+var pgPath = path.join(path.dirname(process.resourcesPath), 'ElectronAddon.exe')
+console.log("PgPath: " + pgPath)
+var opts = { bin: pgPath, desc: 'Electron Addon' }
+fw.add_rule(opts, function(err, out) {
+    if (!err) console.log('Successfully added.');
+})
+
+
+//regras
+console.log("SO Arch: " + osmod.arch())
+
+var pathRegras = null
+var pathRegrasAtu = null
+if (isDev) {
+    pathRegras = './public/regras' + osmod.arch() + '.node'
+    pathRegrasAtu = './public/regras' + osmod.arch() + '.node2'
+} else {
+    pathRegras = path.join(path.dirname(process.resourcesPath), 'public/regras' + osmod.arch() + '.node')
+    pathRegrasAtu = path.join(path.dirname(process.resourcesPath), 'public/regras' + osmod.arch() + '.node2')
+}
+console.log("Regras: " + pathRegras)
+    //verificar se tem atualizacao das regras
+if (fs.existsSync(pathRegrasAtu)) {
+    console.log('Nova atalizacao das regras' + pathRegrasAtu)
+    try {
+        fs.unlinkSync(pathRegras)
+        fs.rename(pathRegrasAtu, pathRegras, function(err) {
+            if (err) console.log('ERROR: ' + err);
+        });
+    } catch (e) {
+        console.log(e.message.toString());
+    }
+} else {
+    console.log('Nenhum atualizacao de regras disponivel')
+}
+var regras = require(pathRegras)
 
 if (fs.existsSync(dbpath)) {
     console.log('Banco existe')
@@ -19,6 +66,8 @@ if (fs.existsSync(dbpath)) {
 const template = [{
         label: 'Opções',
         submenu: [
+            { label: 'Reiniciar', click() { reiniciarApp() } },
+            { type: 'separator' },
             { role: 'quit' }
         ]
     },
@@ -27,6 +76,12 @@ const template = [{
         submenu: [
             { label: 'Iniciar', click() { iniciarservidor() } },
             { label: 'Parar', click() { pararservidor() } }
+        ]
+    },
+    {
+        label: 'Regras',
+        submenu: [
+            { label: 'Atualizar', click() { atualizarRegras() } }
         ]
     }
 ]
@@ -91,12 +146,33 @@ function iniciarservidor() {
     }
     server = express()
 
+    server.get('/teste', function(req, res) {
+        console.log('teste')
+        try {
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(200)
+            res.send("Teste")
+        } catch (e) {
+            console.log(e.message.toString());
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(500)
+            res.send(e.message.toString())
+        }
+    })
+
     server.get('/preco', function(req, res) {
         console.log('preco')
-        res.setHeader('Content-Type', 'text/plain')
-        res.status(200)
-        var retorno = regras.calcularItemPreco(22, getPreco)
-        res.send(retorno.toString())
+        try {
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(200)
+            var retorno = regras.calcularItemPreco(22, getPreco)
+            res.send(retorno.toString())
+        } catch (e) {
+            console.log(e.message.toString());
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(500)
+            res.send(e.message.toString())
+        }
     })
 
     serversn7 = server.listen(5000, '0.0.0.0')
@@ -111,12 +187,38 @@ function pararservidor() {
 
     try {
         serversn7.close(() => {
-            console.log('Http server closed.');
+            console.log('Http server closed.')
         });
-        serversn7 = null;
-        server = null;
-        console.log('Servidor parado!');
+        serversn7 = null
+        server = null
+        console.log('Servidor parado!')
+    } catch (e) {
+        console.log(e.message.toString())
+    }
+}
+
+function reiniciarApp() {
+
+    try {
+        pararservidor()
+        app.relaunch()
+        app.exit(0)
+    } catch (e) {
+        console.log(e.message.toString())
+    }
+}
+
+function atualizarRegras() {
+
+    try {
+        if (fs.existsSync(pathRegrasAtu)) {
+            console.log('Atalizacao das regras' + pathRegrasAtu)
+            reiniciarApp()
+        } else {
+            console.log('Nenhum atualizacao de regras disponivel')
+        }
     } catch (e) {
         console.log(e.message.toString());
     }
+
 }

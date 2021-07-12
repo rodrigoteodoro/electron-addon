@@ -5,8 +5,13 @@
 
 * Compilar o addon
     node-gyp.cmd configure build
+    
     Para electron
-    node-gyp.cmd configure build --target=13.1.4 --arch=x64 --dist-url=https://electronjs.org/headers
+        Se build for para 64 bits:
+            node-gyp.cmd configure build --target=13.1.4 --arch=x64 --dist-url=https://electronjs.org/headers
+    
+        Se build for 32bits:
+        node-gyp.cmd configure build --target=13.1.4 --arch=ia32 --dist-url=https://electronjs.org/headers
 
 * Referências
 
