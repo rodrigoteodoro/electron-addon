@@ -16,6 +16,7 @@
 - https://github.com/nodejs/node-addon-examples
 - https://nodeaddons.com/
 - https://github.com/freezer333/nodecpp-demo/tree/master/quickstart
+- https://stackoverflow.com/questions/48113427/convert-stdstring-to-v8string-and-viceversa
 
 C++ Addons as AWS Lambda functions
 - https://nodeaddons.com/c-addons-as-aws-lambda-functions/

@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Rodrigo\Desenvolvimento\Electron\electron-quick-start\modulos\regras\build\Release\regras.node</FullPath>
+      <FullPath>D:\Rodrigo\Desenvolvimento\Electron\electron-addon\modulos\regras\build\Release\regras.node</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

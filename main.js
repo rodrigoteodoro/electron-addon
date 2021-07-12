@@ -74,10 +74,10 @@ app.on('window-all-closed', function() {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-function getPreco(codigo) {
-    console.log('getPreco ' + codigo)
+function getPreco(query) {
+    console.log('getPreco ' + query)
     var db = btsqlite(dbpath)
-    const row = db.prepare('SELECT produto, pf0 as preco FROM produto WHERE id=?').get(codigo)
+    const row = db.prepare(query).get()
     var retorno = JSON.stringify(row)
     console.log(retorno)
     return row.preco
@@ -90,19 +90,12 @@ function iniciarservidor() {
         server = null
     }
     server = express()
+
     server.get('/preco', function(req, res) {
         console.log('preco')
         res.setHeader('Content-Type', 'text/plain')
         res.status(200)
-        var retorno = getPreco(1)
-        res.send(retorno.toString())
-    })
-
-    server.get('/precodesc', function(req, res) {
-        console.log('precodesc')
-        res.setHeader('Content-Type', 'text/plain')
-        res.status(200)
-        var retorno = regras.desconto(50, 22, getPreco)
+        var retorno = regras.calcularItemPreco(22, getPreco)
         res.send(retorno.toString())
     })
 

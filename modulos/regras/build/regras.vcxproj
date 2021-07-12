@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{47EC8D30-CAA1-62E0-F5DC-F7C6CF997580}</ProjectGuid>
+    <ProjectGuid>{636F9996-2D51-5FB4-CAF6-9C4317DFCACD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>regras</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>

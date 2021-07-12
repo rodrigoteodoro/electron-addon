@@ -1,5 +1,6 @@
 // regras.cc
 #include <node.h>
+#include <string>
 
 using v8::Context;
 using v8::Function;
@@ -13,28 +14,28 @@ using v8::Value;
 using v8::Number;
 using v8::Integer;
 
-void Desconto(const FunctionCallbackInfo<Value>& args) {
+void calcularItemPreco(const FunctionCallbackInfo<Value>& args) {
 
     Isolate* isolate = args.GetIsolate();
     Local<Context> context = isolate->GetCurrentContext();
 
     double desc=5.0;
-    double preco = args[0].As<Number>()->Value();
-    int codigo = args[1].As<Number>()->Value();
+    int codigo = args[0].As<Number>()->Value();
 
-    Local<Function> getPreco = Local<Function>::Cast(args[2]);  
+    Local<Function> gui_consulta = Local<Function>::Cast(args[1]);  
     const unsigned argc = 1;   
+    std::string  query = "SELECT produto, pf0 as preco FROM produto WHERE id = " + std::to_string(codigo);
+    Local<Value> consulta = String::NewFromUtf8(isolate, query.c_str()).ToLocalChecked();
     Local<Value> argv[argc] = {
-         Integer::New(isolate, codigo)
+         consulta
     };
-    double retPreco = getPreco->Call(context, Null(isolate), argc, argv).ToLocalChecked().As<Number>()->Value();
-
+    double retPreco = gui_consulta->Call(context, Null(isolate), argc, argv).ToLocalChecked().As<Number>()->Value();
     args.GetReturnValue().Set(retPreco);
 
 }
 
 void Initialize(Local<Object> exports){
-    NODE_SET_METHOD(exports,"desconto", Desconto);
+    NODE_SET_METHOD(exports,"calcularItemPreco", calcularItemPreco);
 }
 
 NODE_MODULE(addon, Initialize)

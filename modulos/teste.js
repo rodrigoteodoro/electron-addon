@@ -1,9 +1,9 @@
-function getPreco(codigo) {
-    console.log("retornaPreco " + codigo);
+function gui_consulta(query) {
+    console.log("retornaPreco " + query);
     return 50.25
 }
 
 const addon = require('./regras/build/Release/regras.node');
 console.time('c++');
-console.log(addon.desconto(50, 22, getPreco));
+console.log(addon.calcularItemPreco(1, gui_consulta));
 console.timeEnd('c++')
