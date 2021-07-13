@@ -28,7 +28,7 @@ fw.add_rule(opts, function(err, out) {
 })
 
 
-//regras
+//regras C++
 console.log("SO Arch: " + osmod.arch())
 
 var pathRegras = null
@@ -63,6 +63,30 @@ setTimeout(function() {
     console.log('Regras carregadas!')
 }, 3000)
 
+
+//regras JavaScript
+var regrasJS = null
+var pathRegrasJS = "./public/regras.js"
+var pathRegrasJSAtu = "./public/regras2.js"
+    //verificar se tem atualizacao das regrasJS
+if (fs.existsSync(pathRegrasJSAtu)) {
+    console.log('Nova atalizacao das regrasJS' + pathRegrasJSAtu)
+    try {
+        fs.unlinkSync(pathRegrasJS)
+        fs.rename(pathRegrasJSAtu, pathRegrasJS, function(err) {
+            if (err) console.log('ERROR: ' + err)
+        })
+    } catch (e) {
+        console.log(e.message.toString());
+    }
+} else {
+    console.log('Nenhum atualizacao de regrasJS disponivel')
+}
+setTimeout(function() {
+    regrasJS = require(pathRegrasJS)
+    console.log('RegrasJS carregadas!')
+}, 3000)
+
 if (fs.existsSync(dbpath)) {
     console.log('Banco existe')
 } else {
@@ -87,7 +111,8 @@ const template = [{
     {
         label: 'Regras',
         submenu: [
-            { label: 'Atualizar', click() { atualizarRegras() } }
+            { label: 'Atualizar', click() { atualizarRegras() } },
+            { label: 'AtualizarJS', click() { atualizarRegrasJS() } }
         ]
     }
 ]
@@ -181,6 +206,22 @@ function iniciarservidor() {
         }
     })
 
+    server.get('/precojs', function(req, res) {
+        console.log('precojs')
+        try {
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(200)
+            var retorno = regrasJS.calcularItemPreco(22, getPreco)
+            res.send(retorno.toString())
+        } catch (e) {
+            console.log(e.message.toString());
+            res.setHeader('Content-Type', 'text/plain')
+            res.status(500)
+            res.send(e.message.toString())
+        }
+    })
+
+
     serversn7 = server.listen(5000, '0.0.0.0')
     serversn7.on('listening', function() {
         var host = serversn7.address().address
@@ -219,6 +260,21 @@ function atualizarRegras() {
     try {
         if (fs.existsSync(pathRegrasAtu)) {
             console.log('Atalizacao das regras' + pathRegrasAtu)
+            reiniciarApp()
+        } else {
+            console.log('Nenhum atualizacao de regras disponivel')
+        }
+    } catch (e) {
+        console.log(e.message.toString());
+    }
+
+}
+
+function atualizarRegrasJS() {
+
+    try {
+        if (fs.existsSync(pathRegrasJSAtu)) {
+            console.log('Atalizacao das regras' + pathRegrasJSAtu)
             reiniciarApp()
         } else {
             console.log('Nenhum atualizacao de regras disponivel')
