@@ -77,9 +77,8 @@
     "v8_trace_maps": 0,
     "v8_use_siphash": 1,
     "want_separate_host_toolset": 0,
-    "nodedir": "C:\\Users\\rodri\\AppData\\Local\\node-gyp\\Cache\\13.1.4",
+    "nodedir": "C:\\Users\\rodri\\AppData\\Local\\node-gyp\\Cache\\14.17.0",
     "standalone_static_library": 1,
-    "msbuild_path": "D:\\VisualStudio2019\\MSBuild\\Current\\Bin\\MSBuild.exe",
-    "target": "13.1.4"
+    "msbuild_path": "D:\\VisualStudio2019\\MSBuild\\Current\\Bin\\MSBuild.exe"
   }
 }
