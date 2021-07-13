@@ -11,7 +11,7 @@
             node-gyp.cmd configure build --target=13.1.4 --arch=x64 --dist-url=https://electronjs.org/headers
     
         Se build for 32bits:
-        node-gyp.cmd configure build --target=13.1.4 --arch=ia32 --dist-url=https://electronjs.org/headers
+            node-gyp.cmd configure build --target=13.1.4 --arch=ia32 --dist-url=https://electronjs.org/headers
 
 * Referências
 
