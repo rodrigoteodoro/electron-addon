@@ -33,28 +33,23 @@
             "dados/**",
             "public/**"
         ],
-        "publish": [
-            {
-                "provider": "generic",
-                "url": "http://127.0.0.1:5000/"
-            }
-        ],
+        "publish": [{
+            "provider": "generic",
+            "url": "http://127.0.0.1:5000/"
+        }],
         "win": {
             "requestedExecutionLevel": "highestAvailable",
-            "target": [
-                {
-                    "target": "NSIS",
-                    "arch": [
-                        "x64"
-                    ]
-                }
-            ],
+            "target": [{
+                "target": "NSIS",
+                "arch": [
+                    "x64"
+                ]
+            }],
             "icon": "img/icon.png"
         },
         "linux": {
             "artifactName": "${productName}_instalador_${version}.${ext}",
-            "target": [
-                {
+            "target": [{
                     "target": "AppImage"
                 },
                 {
@@ -70,7 +65,7 @@
         "nsis": {
             "oneClick": false,
             "include": "build/installer.nsh",
-            "allowElevation": true,
+            "allowElevation": false,
             "allowToChangeInstallationDirectory": true,
             "createDesktopShortcut": true,
             "createStartMenuShortcut": true,

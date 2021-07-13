@@ -41,21 +41,27 @@ if (isDev) {
     pathRegrasAtu = path.join(path.dirname(process.resourcesPath), 'public/regras' + osmod.arch() + '.node2')
 }
 console.log("Regras: " + pathRegras)
-    //verificar se tem atualizacao das regras
+
+
+//verificar se tem atualizacao das regras
 if (fs.existsSync(pathRegrasAtu)) {
     console.log('Nova atalizacao das regras' + pathRegrasAtu)
     try {
         fs.unlinkSync(pathRegras)
         fs.rename(pathRegrasAtu, pathRegras, function(err) {
-            if (err) console.log('ERROR: ' + err);
-        });
+            if (err) console.log('ERROR: ' + err)
+        })
     } catch (e) {
         console.log(e.message.toString());
     }
 } else {
     console.log('Nenhum atualizacao de regras disponivel')
 }
-var regras = require(pathRegras)
+var regras = null
+setTimeout(function() {
+    regras = require(pathRegras)
+    console.log('Regras carregadas!')
+}, 3000)
 
 if (fs.existsSync(dbpath)) {
     console.log('Banco existe')
